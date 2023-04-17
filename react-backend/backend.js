@@ -37,12 +37,14 @@ app.get('/users/:id', (req, res) => {
 
 app.delete('/users/:id', (req, res) => {
 	const id = req.params['id'];
-	let result = findUserById(id)
+    console.log("char to delete id: " + id);
+	let result = findUserById(id);
 	if (result === undefined || result.length == 0)
 		res.status(404).send('Resource not found.');
 	else {
+        console.log("found user" + result['name'])
 		deleteUser(result)
-		res.status(200).send('OK')
+		res.status(204).send('OK');
 	}
 });
 
@@ -56,9 +58,13 @@ function generate_id() {
     return uuidv4();
 }
 
-//TODO Fix this shit
 function deleteUser(user){
-	users.user_list.splice(users.user_list.indexOf(user), 1);
+	idx = users['users_list'].findIndex(u => u['id'] == user['id'])
+    console.log("idx: " + idx)
+    if (idx !== -1) {
+        users['users_list'].splice(idx, 1)
+    }
+    console.log("deleted user" + user['name']);
 }
 
 function addUser(user){
