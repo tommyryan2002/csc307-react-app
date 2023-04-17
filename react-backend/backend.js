@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const port = 8000;
 const cors = require('cors');
+const { v4: uuidv4 } = require('uuid');
 
 app.use(cors());
 
@@ -47,16 +48,23 @@ app.delete('/users/:id', (req, res) => {
 
 app.post('/users', (req, res) => {
     const userToAdd = req.body;
-    addUser(userToAdd);
-    res.status(200).end();
+    let user = addUser(userToAdd);
+    res.status(201).send(user);
 });
 
+function generate_id() {
+    return uuidv4();
+}
+
+//TODO Fix this shit
 function deleteUser(user){
-	users.user_list.splice(users.user_list.indexOf(user), 1)
+	users.user_list.splice(users.user_list.indexOf(user), 1);
 }
 
 function addUser(user){
+    user['id'] = generate_id();
     users['users_list'].push(user);
+    return user;
 }
 
 function findUserById(id) {
